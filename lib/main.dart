@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:spin_pick/database/drift_database.dart';
+import 'package:spin_pick/screen/home_screen.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final database = LocalDatabase();
+  GetIt.I.registerSingleton<LocalDatabase>(database);
 
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-
-      home: HomeScreen(
-
-      ),
-    );
-  }
+  runApp(
+    MaterialApp(
+      home: HomeScreen(),
+    ),
+  );
 }
