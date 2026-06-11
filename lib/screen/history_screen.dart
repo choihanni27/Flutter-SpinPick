@@ -1,24 +1,12 @@
 // 히스토리 관리 화면
-
-// 랜덤 결과 저장 목록 출력
-// 날짜 표시
-// 전체 삭제
-
-// lib/screen/history_screen.dart
-
 import 'package:flutter/material.dart';
-import '../database/drift_database.dart';
-import '../component/history_card.dart';
+import 'package:get_it/get_it.dart';
+import 'package:spin_pick/database/drift_database.dart';
+import 'package:spin_pick/component/history_card.dart';
 
 class HistoryScreen extends StatelessWidget {
-  final AppDatabase database;
+  const HistoryScreen({Key? key}) : super(key: key);
 
-  const HistoryScreen({
-    super.key,
-    required this.database,
-  });
-
-  // 히스토리 전체 삭제 확인 창
   void _clearAllHistories(BuildContext context) {
     showDialog(
       context: context,
@@ -32,7 +20,7 @@ class HistoryScreen extends StatelessWidget {
           ),
           TextButton(
             onPressed: () async {
-              await database.clearAllHistories(); // DB 전체 비우기
+              await GetIt.I<LocalDatabase>().clearHistories();
               if (context.mounted) Navigator.pop(dialogContext);
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -54,7 +42,6 @@ class HistoryScreen extends StatelessWidget {
         title: const Text('추첨 히스토리'),
         centerTitle: true,
         actions: [
-          // 히스토리 전체 초기화 버튼
           IconButton(
             icon: const Icon(Icons.delete_forever, color: Colors.redAccent),
             tooltip: '전체 초기화',
@@ -63,7 +50,7 @@ class HistoryScreen extends StatelessWidget {
         ],
       ),
       body: StreamBuilder<List<History>>(
-        stream: database.watchHistories(), // 최신순 정렬
+        stream: GetIt.I<LocalDatabase>().watchHistories(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());

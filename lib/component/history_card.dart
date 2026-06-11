@@ -1,7 +1,5 @@
-// lib/component/history_card.dart
-
 import 'package:flutter/material.dart';
-import '../database/drift_database.dart';
+import 'package:spin_pick/database/drift_database.dart';
 
 class HistoryCard extends StatelessWidget {
   final History history;
@@ -13,8 +11,7 @@ class HistoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 날짜
-    final dateStr = "${history.createdAt.year}-${history.createdAt.month.toString().padLeft(2, '0')}-${history.createdAt.day.toString().padLeft(2, '0')} ${history.createdAt.hour.toString().padLeft(2, '0')}:${history.createdAt.minute.toString().padLeft(2, '0')}";
+    final dateStr = "${history.date.year}-${history.date.month.toString().padLeft(2, '0')}-${history.date.day.toString().padLeft(2, '0')} ${history.date.hour.toString().padLeft(2, '0')}:${history.date.minute.toString().padLeft(2, '0')}";
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -44,7 +41,7 @@ class HistoryCard extends StatelessWidget {
             ),
             const Divider(height: 20),
             Text(
-              "벌칙: ${history.penaltyContent}",
+              "벌칙: ${history.penalty}",
               style: const TextStyle(fontSize: 16, color: Colors.redAccent, fontWeight: FontWeight.bold),
             ),
           ],

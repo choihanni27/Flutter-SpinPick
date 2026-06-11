@@ -1,20 +1,10 @@
-// 참가자 관리 화면
-
-// 참가자 추가
-// 참가자 삭제
-// 참가자 목록 출력
-
 import 'package:flutter/material.dart';
-import '../database/drift_database.dart';
-import '../component/member_card.dart';
+import 'package:get_it/get_it.dart';
+import 'package:spin_pick/database/drift_database.dart';
+import 'package:spin_pick/component/member_card.dart';
 
 class MemberScreen extends StatefulWidget {
-  final AppDatabase database;
-
-  const MemberScreen({
-    super.key,
-    required this.database,
-  });
+  const MemberScreen({Key? key}) : super(key: key);
 
   @override
   State<MemberScreen> createState() => _MemberScreenState();
@@ -23,11 +13,9 @@ class MemberScreen extends StatefulWidget {
 class _MemberScreenState extends State<MemberScreen> {
   final TextEditingController _nameController = TextEditingController();
 
-  // 멤버 추가
   void _addMember() async {
     final name = _nameController.text.trim();
 
-    // 빈값 입력 방지
     if (name.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -38,17 +26,14 @@ class _MemberScreenState extends State<MemberScreen> {
       return;
     }
 
-    // DB에 멤버 추가
-    await widget.database.insertMember(
+    await GetIt.I<LocalDatabase>().createMember(
       MembersCompanion.insert(name: name),
     );
 
-    // 입력창 초기화 및 키보드 닫기
     _nameController.clear();
     if (mounted) FocusScope.of(context).unfocus();
   }
 
-  // 멤버 삭제
   void _deleteMember(int id) {
     showDialog(
       context: context,
@@ -57,13 +42,13 @@ class _MemberScreenState extends State<MemberScreen> {
         content: const Text('정말로 이 멤버를 삭제하시겠습니까?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context), // 취소
+            onPressed: () => Navigator.pop(context),
             child: const Text('취소'),
           ),
           TextButton(
             onPressed: () async {
-              await widget.database.deleteMember(id); // DB에서 삭제
-              if (mounted) Navigator.pop(context); // 팝업 닫기
+              await GetIt.I<LocalDatabase>().removeMember(id);
+              if (mounted) Navigator.pop(context);
             },
             child: const Text('삭제', style: TextStyle(color: Colors.red)),
           ),
@@ -87,7 +72,6 @@ class _MemberScreenState extends State<MemberScreen> {
       ),
       body: Column(
         children: [
-          // 1. 입력 영역 (상단)
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
@@ -100,7 +84,7 @@ class _MemberScreenState extends State<MemberScreen> {
                       border: OutlineInputBorder(),
                       contentPadding: EdgeInsets.symmetric(horizontal: 12),
                     ),
-                    onSubmitted: (_) => _addMember(), // 엔터 누르면 추가
+                    onSubmitted: (_) => _addMember(),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -114,11 +98,9 @@ class _MemberScreenState extends State<MemberScreen> {
               ],
             ),
           ),
-
-          // 멤버 리스트 영역
           Expanded(
             child: StreamBuilder<List<Member>>(
-              stream: widget.database.watchMembers(), // DB 실시간 감시
+              stream: GetIt.I<LocalDatabase>().watchMembers(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());

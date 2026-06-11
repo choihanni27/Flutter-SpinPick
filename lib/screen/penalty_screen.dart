@@ -1,21 +1,10 @@
-// 벌칙 관리 화면.
-
-// 벌칙 추가
-// 벌칙 삭제
-// 벌칙 목록 관리
-// lib/screen/penalty_screen.dart
-
 import 'package:flutter/material.dart';
-import '../database/drift_database.dart';
-import '../component/penalty_card.dart';
+import 'package:get_it/get_it.dart';
+import 'package:spin_pick/database/drift_database.dart';
+import 'package:spin_pick/component/penalty_card.dart';
 
 class PenaltyScreen extends StatefulWidget {
-  final AppDatabase database;
-
-  const PenaltyScreen({
-    super.key,
-    required this.database,
-  });
+  const PenaltyScreen({Key? key}) : super(key: key);
 
   @override
   State<PenaltyScreen> createState() => _PenaltyScreenState();
@@ -24,11 +13,10 @@ class PenaltyScreen extends StatefulWidget {
 class _PenaltyScreenState extends State<PenaltyScreen> {
   final TextEditingController _penaltyController = TextEditingController();
 
-  // 벌칙 추가
   void _addPenalty() async {
     final content = _penaltyController.text.trim();
 
-    if (content.isEmpty) { // 빈 값
+    if (content.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('벌칙 내용을 입력해 주세요!'),
@@ -38,7 +26,7 @@ class _PenaltyScreenState extends State<PenaltyScreen> {
       return;
     }
 
-    await widget.database.insertPenalty(
+    await GetIt.I<LocalDatabase>().createPenalty(
       PenaltiesCompanion.insert(content: content),
     );
 
@@ -46,7 +34,6 @@ class _PenaltyScreenState extends State<PenaltyScreen> {
     if (mounted) FocusScope.of(context).unfocus();
   }
 
-  // 벌칙 삭제 확인 창
   void _deletePenalty(int id) {
     showDialog(
       context: context,
@@ -60,7 +47,7 @@ class _PenaltyScreenState extends State<PenaltyScreen> {
           ),
           TextButton(
             onPressed: () async {
-              await widget.database.deletePenalty(id);
+              await GetIt.I<LocalDatabase>().removePenalty(id);
               if (mounted) Navigator.pop(context);
             },
             child: const Text('삭제', style: TextStyle(color: Colors.red)),
@@ -85,7 +72,6 @@ class _PenaltyScreenState extends State<PenaltyScreen> {
       ),
       body: Column(
         children: [
-          // 입력
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
@@ -112,10 +98,9 @@ class _PenaltyScreenState extends State<PenaltyScreen> {
               ],
             ),
           ),
-          // 벌칙 리스트
           Expanded(
             child: StreamBuilder<List<Penalty>>(
-              stream: widget.database.watchPenalties(),
+              stream: GetIt.I<LocalDatabase>().watchPenalties(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
