@@ -1,10 +1,3 @@
-// DB 핵심 파
-
-// 테이블 생성
-// 데이터 저장
-// 데이터 삭제
-// 데이터 조회
-
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
@@ -33,7 +26,8 @@ class LocalDatabase extends _$LocalDatabase {
   Future<int> removePenalty(int id) => (delete(penalties)..where((t) => t.id.equals(id))).go();
 
   // 히스토리
-  Stream<List<History>> watchHistories() => select(histories).watch();
+  Stream<List<History>> watchHistories() =>
+      (select(histories)..orderBy([(t) => OrderingTerm(expression: t.date, mode: OrderingMode.desc)])).watch();
   Future<int> createHistory(HistoriesCompanion data) => into(histories).insert(data);
   Future<int> clearHistories() => delete(histories).go();
 

@@ -11,6 +11,10 @@ void main() async {
 
   runApp(
     MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        fontFamily: 'esamanru OTF Bold',
+      ),
       home: HomeScreen(),
     ),
   );
