@@ -39,8 +39,26 @@ class HistoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('추첨 기록'),
-        centerTitle: true,
+        // 1. 왼쪽에 로고 이미지 배치
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 16.0), // 왼쪽 여백 조절
+          child: Image.asset(
+            'assets/images/logo.png',
+            fit: BoxFit.contain,
+          ),
+        ),
+        leadingWidth: 100, // 로고가 잘리지 않도록 가로 길이 확보 (이미지 비율에 따라 조절 가능)
+
+        // 2. 가운데에 제목 텍스트 배치
+        title: const Text(
+          '추첨 기록',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
+        ),
+        centerTitle: true, // 제목 센터 정렬 보장
+
         actions: [
           IconButton(
             icon: const Icon(Icons.delete_forever, color: Colors.redAccent),
