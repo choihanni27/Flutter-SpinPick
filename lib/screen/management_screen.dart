@@ -13,7 +13,10 @@ class ManagementScreen extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('관리'),
+          title: Image.asset(
+            'assets/images/logo.png',
+            height: 40,
+          ),
           centerTitle: true,
           bottom: const TabBar(
             tabs: [
