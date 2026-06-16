@@ -28,7 +28,7 @@ class HistoryScreen extends StatelessWidget {
                 );
               }
             },
-            child: const Text('초기화', style: TextStyle(color: Colors.red)),
+            child: const Text('초기화', style: TextStyle(color: Color(0xFFCC2827),)),
           ),
         ],
       ),
@@ -39,7 +39,7 @@ class HistoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('추첨 히스토리'),
+        title: const Text('추첨 기록'),
         centerTitle: true,
         actions: [
           IconButton(
@@ -61,7 +61,7 @@ class HistoryScreen extends StatelessWidget {
           if (histories.isEmpty) {
             return const Center(
               child: Text(
-                '아직 추첨 기록이 없습니다.\n게임을 진행해 보세요! 🎲',
+                '벌칙 추첨 기록이 없습니다.',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.grey, fontSize: 16),
               ),

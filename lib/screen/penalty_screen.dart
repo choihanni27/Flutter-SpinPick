@@ -1,3 +1,5 @@
+// 벌칙 관리 화면
+
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:spin_pick/database/drift_database.dart';
@@ -93,7 +95,8 @@ class _PenaltyScreenState extends State<PenaltyScreen> {
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
-                  child: const Text('추가'),
+                  child: const Text('추가', style: TextStyle(color : Color(
+                      0xFFC32627),)),
                 ),
               ],
             ),

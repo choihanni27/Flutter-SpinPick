@@ -34,8 +34,10 @@ class _HomeScreenState extends State<HomeScreen> {
       body: screens[currentIndex], // 현재 탭에 맞는 화면 표시
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,
-        selectedLabelStyle: TextStyle(fontFamily: 'esamanru OTF Bold'),
-        unselectedLabelStyle: TextStyle(fontFamily: 'esamanru OTF Bold'),
+        selectedItemColor: Color(0xFFCC2827),    // 선택된 탭 색
+        unselectedItemColor: Colors.grey,
+        selectedLabelStyle: TextStyle(fontFamily: 'DNFBitBitv2'),
+        unselectedLabelStyle: TextStyle(fontFamily: 'DNFBitBitv2'),
         onTap: (index) {
           setState(() {
             currentIndex = index;

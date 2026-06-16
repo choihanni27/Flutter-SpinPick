@@ -1,3 +1,5 @@
+// 멤버 관리 화면
+
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:spin_pick/database/drift_database.dart';
