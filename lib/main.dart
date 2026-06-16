@@ -13,7 +13,19 @@ void main() async {
     MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        fontFamily: 'esamanru OTF Bold',
+        fontFamily: 'DNFBitBitv2',
+        scaffoldBackgroundColor: Color(0xFFFDF8F8),
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,  // 글자/아이콘 색
+          elevation: 0,  // 그림자 없애기
+        ),
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          backgroundColor: Colors.white,
+        ),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.red,
+        ),
       ),
       home: HomeScreen(),
     ),

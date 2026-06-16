@@ -1,3 +1,5 @@
+// 관리 화면 틀
+
 import 'package:flutter/material.dart';
 import 'package:spin_pick/screen/user_screen.dart';
 import 'package:spin_pick/screen/penalty_screen.dart';

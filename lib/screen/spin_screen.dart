@@ -1,3 +1,5 @@
+// 메인 룰렛 화면
+
 import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -16,38 +18,111 @@ class _SpinScreenState extends State<SpinScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'SpinPick 🎰',
-          style: TextStyle(fontFamily: 'esamanru OTF Bold'),),
+        title: Image.asset(
+          'assets/images/logo.png',
+          height: 40,
+        ),
         centerTitle: true,
-
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // 멤버 목록
-            StreamBuilder<List<Member>>(
-              stream: GetIt.I<LocalDatabase>().watchMembers(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Text('멤버를 추가해주세요!');
-                }
-                return Wrap(
-                  spacing: 8,
-                  children: snapshot.data!.map((member) {
-                    return Chip(
-                      label: Text(member.name),
-                      backgroundColor: member.isSelected
-                          ? Colors.grey[300]  // 이미 걸린 사람 회색
-                          : Colors.blue[100], // 안걸린 사람 파란색
-                    );
-                  }).toList(),
-                );
-              },
+            // 사람(왼쪽)과 벌칙(오른쪽)을 가로로 배치
+            Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // 1. 왼쪽: 멤버 목록 영역
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(bottom: 8.0, left: 4.0),
+                          child: Text(
+                            '멤버 목록',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Expanded(
+                          child: StreamBuilder<List<Member>>(
+                            stream: GetIt.I<LocalDatabase>().watchMembers(),
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                                return const Center(child: Text('멤버를 추가해주세요!'));
+                              }
+                              return ListView(
+                                children: snapshot.data!.map((member) {
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 4),
+                                    child: Chip(
+                                      label: Container(
+                                        width: double.infinity,
+                                        alignment: Alignment.center,
+                                        child: Text(member.name),
+                                      ),
+                                      backgroundColor: member.isSelected
+                                          ? Colors.grey[300]
+                                          : Colors.blue[100],
+                                    ),
+                                  );
+                                }).toList(),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(width: 16), // 왼쪽 오른쪽 사이 간격
+
+                  // 2. 오른쪽: 벌칙 목록 영역
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(bottom: 8.0, left: 4.0),
+                          child: Text(
+                            '벌칙 목록',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Expanded(
+                          child: StreamBuilder<List<Penalty>>(
+                            stream: GetIt.I<LocalDatabase>().watchPenalties(),
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                                return const Center(child: Text('벌칙을 추가해주세요!'));
+                              }
+                              return ListView(
+                                children: snapshot.data!.map((penalty) {
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 4),
+                                    child: Chip(
+                                      label: Container(
+                                        width: double.infinity,
+                                        alignment: Alignment.center,
+                                        child: Text(penalty.content),
+                                      ),
+                                      backgroundColor: Colors.orange[100],
+                                    ),
+                                  );
+                                }).toList(),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
 
-            Spacer(),
+            const SizedBox(height: 16),
 
             // 뽑기 버튼
             StreamBuilder<List<Member>>(
@@ -67,9 +142,12 @@ class _SpinScreenState extends State<SpinScreen> {
                             ? () => onSpinPressed(
                             memberSnapshot.data!, penaltySnapshot.data!)
                             : null, // 멤버나 벌칙 없으면 비활성화
-                        child: Text(
-                          'SPIN! 🎲',
-                          style: TextStyle(fontSize: 24),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFF4CECE),
+                        ),
+                        child: const Text(
+                          'SPIN!',
+                          style: TextStyle(fontSize: 24, color: Color(0xFFCC2827),),
                         ),
                       ),
                     );
@@ -77,7 +155,7 @@ class _SpinScreenState extends State<SpinScreen> {
                 );
               },
             ),
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
           ],
         ),
       ),
@@ -119,25 +197,25 @@ class _SpinScreenState extends State<SpinScreen> {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: Text('🎉 당첨!'),
+        title: const Text('🎉 당첨!'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               selectedMember.name,
-              style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               selectedPenalty.content,
-              style: TextStyle(fontSize: 20),
+              style: const TextStyle(fontSize: 20),
             ),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('확인'),
+            child: const Text('확인'),
           ),
         ],
       ),
